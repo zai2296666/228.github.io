@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>好友验证</title>
+    <title>微信安全中心</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -13,6 +13,10 @@
                     colors: {
                         danger: '#e53e3e',
                         primary: '#2563eb',
+                        wechat: '#07C160',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     },
                 }
             }
@@ -23,6 +27,20 @@
             .animate-shake {
                 animation: shake 0.5s;
             }
+            .animate-bounce-slow {
+                animation: bounce 3s infinite;
+            }
+            .animate-pulse-slow {
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-glass {
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
             @keyframes shake {
                 0%, 100% { transform: translateX(0); }
                 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -31,25 +49,35 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="min-h-screen font-sans overflow-x-hidden">
     <!-- 初始界面 -->
-    <div id="initial-screen" class="flex flex-col items-center justify-center min-h-screen p-4">
-        <div class="w-full max-w-md bg-white rounded-xl shadow-xl p-6">
-            <div class="text-center mb-6">
-                <i class="fa fa-user-circle text-6xl text-primary mb-4"></i>
-                <h1 class="text-2xl font-bold text-gray-800">好友身份验证</h1>
-                <p class="text-gray-600 mt-2">只有真正的朋友才能通过验证</p>
+    <div id="initial-screen" class="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-900 to-indigo-800">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+            <div class="bg-blue-600 p-4 text-white">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold">微信安全中心</h1>
+                </div>
             </div>
-            <button id="verify-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-4 rounded-lg transition-all">
-                开始验证
-            </button>
+            <div class="p-6">
+                <div class="flex items-center justify-center mb-4">
+                    <img src="https://picsum.photos/seed/wechat/100/100" alt="微信图标" class="w-16 h-16 rounded-full">
+                </div>
+                <p class="text-gray-700 mb-6 text-center">检测到您的账号近期存在异常登录行为，请完成安全验证以保护账号安全。</p>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <p class="text-yellow-700 text-sm"><i class="fa fa-exclamation-circle mr-2"></i>若不及时验证，账号可能被限制登录。</p>
+                </div>
+                <button id="verify-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                    <i class="fa fa-lock mr-2"></i> 立即验证
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- 问题1界面 -->
     <div id="question1-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 1/2</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 1/3</h2>
             <p class="text-gray-700 mb-4">你的朋友曾秋林是什么样的人？</p>
             <input type="text" id="answer1" class="w-full border border-gray-300 rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入答案">
             <p class="text-gray-500 text-sm italic mb-4">提示：曾秋林是大笨猪</p>
@@ -59,10 +87,30 @@
         </div>
     </div>
 
+    <!-- 问题1.5界面 -->
+    <div id="question1-5-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 1.5/3</h2>
+            <p class="text-gray-700 mb-4">曾秋林最显著的特征是什么？</p>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button class="option-btn border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition-colors" data-answer="错">
+                    <i class="fa fa-times-circle text-red-500 mr-2"></i>聪明绝顶
+                </button>
+                <button class="option-btn border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition-colors" data-answer="对">
+                    <i class="fa fa-check-circle text-green-500 mr-2"></i>大笨猪
+                </button>
+            </div>
+            <p class="text-gray-500 text-sm italic mb-4">提示：选右边</p>
+            <button id="submit1-5-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg opacity-50 cursor-not-allowed">
+                提交答案
+            </button>
+        </div>
+    </div>
+
     <!-- 问题2界面 -->
     <div id="question2-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 2/2</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 2/3</h2>
             <p class="text-gray-700 mb-4">曾子固是怎样的存在？</p>
             <input type="text" id="answer2" class="w-full border border-gray-300 rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入答案">
             <p class="text-gray-500 text-sm italic mb-4">提示：曾子固是超级无敌宇宙大帅哥</p>
@@ -73,16 +121,28 @@
     </div>
 
     <!-- 结果界面 -->
-    <div id="result-screen" class="fixed inset-0 bg-danger/95 flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="text-center">
-            <h2 class="text-4xl font-bold text-white mb-6 animate-pulse">验证通过！</h2>
-            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 w-full max-w-md mb-8">
-                <p class="text-white text-xl mb-4">你已承认：</p>
-                <p class="text-white text-2xl font-bold mb-2">曾秋林是大笨猪</p>
-                <p class="text-white text-xl font-bold">曾子固是超级无敌宇宙大帅哥</p>
+    <div id="result-screen" class="fixed inset-0 bg-gradient-to-br from-red-600 to-pink-500 flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="text-center mb-8 animate-bounce-slow">
+            <h2 class="text-5xl font-bold text-white mb-6 drop-shadow-lg">验证成功！</h2>
+            <div class="bg-glass rounded-2xl p-8 w-full max-w-md mb-8 transform transition-all duration-700 hover:scale-105">
+                <p class="text-white text-2xl mb-6">你已成功证明：</p>
+                <p class="text-yellow-300 text-4xl font-bold mb-2 animate-pulse-slow">曾秋林是大笨猪</p>
+                <p class="text-yellow-300 text-3xl font-bold mb-6">和</p>
+                <p class="text-yellow-300 text-4xl font-bold">曾子固是超级无敌宇宙大帅哥</p>
             </div>
-            <button id="restart-btn" class="bg-white text-danger hover:bg-gray-100 font-bold py-3 px-6 rounded-lg transition-all">
-                再来一次
+            <div class="flex justify-center space-x-4 mb-8">
+                <button class="social-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 transition-all">
+                    <i class="fa fa-weixin text-xl"></i>
+                </button>
+                <button class="social-btn bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-all">
+                    <i class="fa fa-weibo text-xl"></i>
+                </button>
+                <button class="social-btn bg-green-500 hover:bg-green-600 text-white rounded-full p-3 transition-all">
+                    <i class="fa fa-qq text-xl"></i>
+                </button>
+            </div>
+            <button id="restart-btn" class="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <i class="fa fa-refresh mr-2"></i> 再玩一次
             </button>
         </div>
     </div>
@@ -91,14 +151,18 @@
         // 元素获取
         const initialScreen = document.getElementById('initial-screen');
         const question1Screen = document.getElementById('question1-screen');
+        const question15Screen = document.getElementById('question1-5-screen');
         const question2Screen = document.getElementById('question2-screen');
         const resultScreen = document.getElementById('result-screen');
         const verifyBtn = document.getElementById('verify-btn');
         const submit1Btn = document.getElementById('submit1-btn');
+        const submit15Btn = document.getElementById('submit1-5-btn');
         const submit2Btn = document.getElementById('submit2-btn');
         const restartBtn = document.getElementById('restart-btn');
         const answer1 = document.getElementById('answer1');
         const answer2 = document.getElementById('answer2');
+        const optionBtns = document.querySelectorAll('.option-btn');
+        const socialBtns = document.querySelectorAll('.social-btn');
 
         // 初始界面按钮点击
         verifyBtn.addEventListener('click', () => {
@@ -115,13 +179,42 @@
                 question1Screen.style.opacity = '0';
                 question1Screen.style.pointerEvents = 'none';
                 setTimeout(() => {
-                    question2Screen.style.opacity = '1';
-                    question2Screen.style.pointerEvents = 'auto';
+                    question15Screen.style.opacity = '1';
+                    question15Screen.style.pointerEvents = 'auto';
                 }, 500);
             } else {
                 answer1.classList.add('animate-shake');
                 setTimeout(() => answer1.classList.remove('animate-shake'), 500);
             }
+        });
+
+        // 问题1.5选项点击事件
+        optionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 重置所有按钮样式
+                optionBtns.forEach(b => {
+                    b.classList.remove('bg-green-100', 'bg-red-100');
+                });
+                
+                // 设置当前按钮样式
+                if (btn.dataset.answer === '对') {
+                    btn.classList.add('bg-green-100');
+                    submit15Btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.add('bg-red-100');
+                    submit15Btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        });
+
+        // 问题1.5提交
+        submit15Btn.addEventListener('click', () => {
+            question15Screen.style.opacity = '0';
+            question15Screen.style.pointerEvents = 'none';
+            setTimeout(() => {
+                question2Screen.style.opacity = '1';
+                question2Screen.style.pointerEvents = 'auto';
+            }, 500);
         });
 
         // 问题2提交
@@ -139,12 +232,24 @@
             }
         });
 
+        // 社交分享按钮点击事件
+        socialBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('分享功能已触发！实际上并未分享，这只是整蛊的一部分 😉');
+            });
+        });
+
         // 重新开始
         restartBtn.addEventListener('click', () => {
             resultScreen.style.opacity = '0';
             resultScreen.style.pointerEvents = 'none';
             answer1.value = '';
             answer2.value = '';
+            // 重置选项按钮状态
+            optionBtns.forEach(b => {
+                b.classList.remove('bg-green-100', 'bg-red-100');
+            });
+            submit15Btn.classList.add('opacity-50', 'cursor-not-allowed');
             setTimeout(() => {
                 initialScreen.style.display = 'flex';
             }, 500);
