@@ -1,259 +1,1256 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>微信安全中心</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        danger: '#e53e3e',
-                        primary: '#2563eb',
-                        wechat: '#07C160',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
+< !DOCTYPE
+html >
+< html
+lang = "zh-CN" >
+< head >
+< meta
+charset = "UTF-8" >
+< meta
+name = "viewport"
+content = "width=device-width, initial-scale=1.0" >
+< title > 系统安全验证中心 < / title >
+< script
+src = "https://cdn.tailwindcss.com" > < / script >
+< link
+href = "https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+rel = "stylesheet" >
+< script >
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                system: '#165DFF',
+                danger: '#F53F3F',
+                success: '#00B42A',
+                warning: '#FF7D00'
             }
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .animate-shake {
-                animation: shake 0.5s;
-            }
-            .animate-bounce-slow {
-                animation: bounce 3s infinite;
-            }
-            .animate-pulse-slow {
-                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .bg-glass {
-                background: rgba(255, 255, 255, 0.2);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-            }
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                20%, 40%, 60%, 80% { transform: translateX(5px); }
-            }
-        }
-    </style>
-</head>
-<body class="min-h-screen font-sans overflow-x-hidden">
-    <!-- 初始界面 -->
-    <div id="initial-screen" class="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-900 to-indigo-800">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
-            <div class="bg-blue-600 p-4 text-white">
-                <div class="flex items-center">
-                    <i class="fa fa-shield text-2xl mr-3"></i>
-                    <h1 class="text-xl font-bold">微信安全中心</h1>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="flex items-center justify-center mb-4">
-                    <img src="https://picsum.photos/seed/wechat/100/100" alt="微信图标" class="w-16 h-16 rounded-full">
-                </div>
-                <p class="text-gray-700 mb-6 text-center">检测到您的账号近期存在异常登录行为，请完成安全验证以保护账号安全。</p>
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-                    <p class="text-yellow-700 text-sm"><i class="fa fa-exclamation-circle mr-2"></i>若不及时验证，账号可能被限制登录。</p>
-                </div>
-                <button id="verify-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
-                    <i class="fa fa-lock mr-2"></i> 立即验证
-                </button>
-            </div>
-        </div>
-    </div>
+    }
+}
+< / script >
+< style
+type = "text/tailwindcss" >
 
-    <!-- 问题1界面 -->
-    <div id="question1-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 1/3</h2>
-            <p class="text-gray-700 mb-4">你的朋友曾秋林是什么样的人？</p>
-            <input type="text" id="answer1" class="w-full border border-gray-300 rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入答案">
-            <p class="text-gray-500 text-sm italic mb-4">提示：曾秋林是大笨猪</p>
-            <button id="submit1-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg">
-                提交答案
-            </button>
-        </div>
-    </div>
 
-    <!-- 问题1.5界面 -->
-    <div id="question1-5-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 1.5/3</h2>
-            <p class="text-gray-700 mb-4">曾秋林最显著的特征是什么？</p>
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <button class="option-btn border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition-colors" data-answer="错">
-                    <i class="fa fa-times-circle text-red-500 mr-2"></i>聪明绝顶
-                </button>
-                <button class="option-btn border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition-colors" data-answer="对">
-                    <i class="fa fa-check-circle text-green-500 mr-2"></i>大笨猪
-                </button>
-            </div>
-            <p class="text-gray-500 text-sm italic mb-4">提示：选右边</p>
-            <button id="submit1-5-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg opacity-50 cursor-not-allowed">
-                提交答案
-            </button>
-        </div>
-    </div>
+@layer
 
-    <!-- 问题2界面 -->
-    <div id="question2-screen" class="fixed inset-0 bg-primary/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="w-full max-w-md bg-white rounded-xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">问题 2/3</h2>
-            <p class="text-gray-700 mb-4">曾子固是怎样的存在？</p>
-            <input type="text" id="answer2" class="w-full border border-gray-300 rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入答案">
-            <p class="text-gray-500 text-sm italic mb-4">提示：曾子固是超级无敌宇宙大帅哥</p>
-            <button id="submit2-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg">
-                提交答案
-            </button>
-        </div>
-    </div>
 
-    <!-- 结果界面 -->
-    <div id="result-screen" class="fixed inset-0 bg-gradient-to-br from-red-600 to-pink-500 flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="text-center mb-8 animate-bounce-slow">
-            <h2 class="text-5xl font-bold text-white mb-6 drop-shadow-lg">验证成功！</h2>
-            <div class="bg-glass rounded-2xl p-8 w-full max-w-md mb-8 transform transition-all duration-700 hover:scale-105">
-                <p class="text-white text-2xl mb-6">你已成功证明：</p>
-                <p class="text-yellow-300 text-4xl font-bold mb-2 animate-pulse-slow">曾秋林是大笨猪</p>
-                <p class="text-yellow-300 text-3xl font-bold mb-6">和</p>
-                <p class="text-yellow-300 text-4xl font-bold">曾子固是超级无敌宇宙大帅哥</p>
-            </div>
-            <div class="flex justify-center space-x-4 mb-8">
-                <button class="social-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 transition-all">
-                    <i class="fa fa-weixin text-xl"></i>
-                </button>
-                <button class="social-btn bg-red-500 hover:bg-red-600 text-white rounded-full p-3 transition-all">
-                    <i class="fa fa-weibo text-xl"></i>
-                </button>
-                <button class="social-btn bg-green-500 hover:bg-green-600 text-white rounded-full p-3 transition-all">
-                    <i class="fa fa-qq text-xl"></i>
-                </button>
-            </div>
-            <button id="restart-btn" class="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
-                <i class="fa fa-refresh mr-2"></i> 再玩一次
-            </button>
-        </div>
-    </div>
+utilities
+{
+.animate - shake
+{
+    animation: shake 0.5s;
+}
+.animate - pulse - slow
+{
+    animation: pulse 3s cubic - bezier(0.4, 0, 0.6, 1) infinite;
+}
+.animate - float
+{
+    animation: float 3s ease - in -out infinite;
+}
+.animate - progress
+{
+    animation: progress 2s linear infinite;
+}
+.text - shadow
+{
+    text - shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.bg - glass
+{
+    background: rgba(255, 255, 255, 0.15);
+backdrop - filter: blur(10
+px);
+}
+.slider - thumb
+{
+    appearance: none;
+width: 24
+px;
+height: 24
+px;
+background: white;
+border: 2
+px
+solid  # 165DFF;
+border - radius: 50 %;
+cursor: pointer;
+box - shadow: 0
+2
+px
+4
+px
+rgba(0, 0, 0, 0.2);
+}
+.slider - track
+{
+    height: 6px;
+border - radius: 3
+px;
+background:  # E5E6EB;
+}
 
-    <script>
-        // 元素获取
-        const initialScreen = document.getElementById('initial-screen');
-        const question1Screen = document.getElementById('question1-screen');
-        const question15Screen = document.getElementById('question1-5-screen');
-        const question2Screen = document.getElementById('question2-screen');
-        const resultScreen = document.getElementById('result-screen');
-        const verifyBtn = document.getElementById('verify-btn');
-        const submit1Btn = document.getElementById('submit1-btn');
-        const submit15Btn = document.getElementById('submit1-5-btn');
-        const submit2Btn = document.getElementById('submit2-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const answer1 = document.getElementById('answer1');
-        const answer2 = document.getElementById('answer2');
-        const optionBtns = document.querySelectorAll('.option-btn');
-        const socialBtns = document.querySelectorAll('.social-btn');
+@keyframes
 
-        // 初始界面按钮点击
-        verifyBtn.addEventListener('click', () => {
-            initialScreen.style.display = 'none';
-            setTimeout(() => {
-                question1Screen.style.opacity = '1';
-                question1Screen.style.pointerEvents = 'auto';
-            }, 100);
-        });
 
-        // 问题1提交
-        submit1Btn.addEventListener('click', () => {
-            if (answer1.value.trim() === '曾秋林是大笨猪') {
-                question1Screen.style.opacity = '0';
-                question1Screen.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    question15Screen.style.opacity = '1';
-                    question15Screen.style.pointerEvents = 'auto';
-                }, 500);
-            } else {
-                answer1.classList.add('animate-shake');
-                setTimeout(() => answer1.classList.remove('animate-shake'), 500);
-            }
-        });
+shake
+{
+    0 %, 100 % {transform: translateX(0);}
+10 %, 30 %, 50 %, 70 %, 90 % {transform: translateX(-5px);}
+20 %, 40 %, 60 %, 80 % {transform: translateX(5px);}
+}
 
-        // 问题1.5选项点击事件
-        optionBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // 重置所有按钮样式
-                optionBtns.forEach(b => {
-                    b.classList.remove('bg-green-100', 'bg-red-100');
-                });
-                
-                // 设置当前按钮样式
-                if (btn.dataset.answer === '对') {
-                    btn.classList.add('bg-green-100');
-                    submit15Btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                } else {
-                    btn.classList.add('bg-red-100');
-                    submit15Btn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
-            });
-        });
+@keyframes
 
-        // 问题1.5提交
-        submit15Btn.addEventListener('click', () => {
-            question15Screen.style.opacity = '0';
-            question15Screen.style.pointerEvents = 'none';
-            setTimeout(() => {
-                question2Screen.style.opacity = '1';
-                question2Screen.style.pointerEvents = 'auto';
-            }, 500);
-        });
 
-        // 问题2提交
-        submit2Btn.addEventListener('click', () => {
-            if (answer2.value.trim() === '曾子固是超级无敌宇宙大帅哥') {
-                question2Screen.style.opacity = '0';
-                question2Screen.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    resultScreen.style.opacity = '1';
-                    resultScreen.style.pointerEvents = 'auto';
-                }, 500);
-            } else {
-                answer2.classList.add('animate-shake');
-                setTimeout(() => answer2.classList.remove('animate-shake'), 500);
-            }
-        });
+float
+{
+    0 %, 100 % {transform: translateY(0);}
+50 % {transform: translateY(-10px);}
+}
 
-        // 社交分享按钮点击事件
-        socialBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                alert('分享功能已触发！实际上并未分享，这只是整蛊的一部分 😉');
-            });
-        });
+@keyframes
 
-        // 重新开始
-        restartBtn.addEventListener('click', () => {
-            resultScreen.style.opacity = '0';
-            resultScreen.style.pointerEvents = 'none';
-            answer1.value = '';
-            answer2.value = '';
-            // 重置选项按钮状态
-            optionBtns.forEach(b => {
-                b.classList.remove('bg-green-100', 'bg-red-100');
-            });
-            submit15Btn.classList.add('opacity-50', 'cursor-not-allowed');
-            setTimeout(() => {
-                initialScreen.style.display = 'flex';
-            }, 500);
-        });
-    </script>
-</body>
-</html>
+
+progress
+{
+    0 % {width: 0 %;}
+100 % {width: 100 %;}
+}
+}
+< / style >
+< / head >
+< body
+
+
+class ="bg-gray-100 min-h-screen overflow-x-hidden font-sans" >
+
+< !-- 1.
+初始警告页面 -->
+< div
+id = "step1"
+
+
+class ="flex flex-col items-center justify-center min-h-screen p-4" >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border-t-4 border-danger transform transition-all duration-700" >
+
+< div
+
+
+class ="p-6" >
+
+< div
+
+
+class ="flex items-start mb-6" >
+
+< div
+
+
+class ="bg-danger/10 p-3 rounded-full mr-4" >
+
+< i
+
+
+class ="fa fa-exclamation-triangle text-danger text-2xl" > < / i >
+
+< / div >
+< div >
+< h1
+
+
+class ="text-2xl font-bold text-gray-800 mb-2" > 系统紧急警告 < / h1 >
+
+< p
+
+
+class ="text-gray-600" > 您的设备已检测到3项高危风险，需立即处理！ < / p >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="space-y-4 mb-8" >
+
+< div
+
+
+class ="flex items-center p-3 bg-orange-50 rounded-lg" >
+
+< i
+
+
+class ="fa fa-shield text-warning mr-3" > < / i >
+
+< span
+
+
+class ="text-gray-700 text-sm" > 账号异地登录检测（来自未知设备） < / span >
+
+< / div >
+< div
+
+
+class ="flex items-center p-3 bg-orange-50 rounded-lg" >
+
+< i
+
+
+class ="fa fa-lock text-warning mr-3" > < / i >
+
+< span
+
+
+class ="text-gray-700 text-sm" > 密码强度过低，易被破解 < / span >
+
+< / div >
+< div
+
+
+class ="flex items-center p-3 bg-orange-50 rounded-lg" >
+
+< i
+
+
+class ="fa fa-user-secret text-warning mr-3" > < / i >
+
+< span
+
+
+class ="text-gray-700 text-sm" > 个人信息泄露风险（已被3个恶意网站抓取） < / span >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="bg-red-50 border-l-4 border-danger p-4 mb-6" >
+
+< p
+
+
+class ="text-gray-700 text-sm" > < i class ="fa fa-clock-o mr-2" > < / i > < strong > 倒计时：03:00 <
+
+/ strong > 未处理将自动锁定设备！ < / p >
+< / div >
+
+< button
+id = "toStep2"
+
+
+class ="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center" >
+
+< i
+
+
+class ="fa fa-wrench mr-2" > < / i > 立即修复风险
+
+< / button >
+< / div >
+< / div >
+< / div >
+
+< !-- 2.
+用户信息验证 -->
+< div
+id = "step2"
+
+
+class ="fixed inset-0 bg-gray-100 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500" >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 transform transition-all duration-500 scale-95" >
+
+< div
+
+
+class ="flex items-center mb-6" >
+
+< i
+
+
+class ="fa fa-id-card text-system text-3xl mr-3" > < / i >
+
+< h2
+
+
+class ="text-2xl font-bold text-gray-800" > 用户身份验证 < / h2 >
+
+< / div >
+
+< p
+
+
+class ="text-gray-600 mb-6" > 请填写以下信息，验证您是账号持有者 < / p >
+
+< div
+
+
+class ="space-y-4 mb-6" >
+
+< div >
+< label
+
+
+class ="block text-gray-700 text-sm font-medium mb-1" > 姓名 < / label >
+
+< input
+type = "text"
+id = "userName"
+
+
+class ="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-system/50" placeholder="请输入您的姓名" >
+
+< / div >
+
+< div >
+< label
+
+
+class ="block text-gray-700 text-sm font-medium mb-1" > 与账号持有者关系 < / label >
+
+< select
+id = "relation"
+
+
+class ="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-system/50 bg-white" >
+
+< option
+value = "" > 请选择关系 < / option >
+< option
+value = "self" > 本人 < / option >
+< option
+value = "friend" > 朋友 < / option >
+< option
+value = "family" > 家人 < / option >
+< option
+value = "other" > 其他 < / option >
+< / select >
+< / div >
+< / div >
+
+< p
+
+
+class ="text-gray-500 text-xs mb-6" > < i class ="fa fa-info-circle mr-1" > < / i > 我们承诺保护您的信息安全，仅用于本次验证 < / p >
+
+< button
+id = "toStep3"
+
+
+class ="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 opacity-50 cursor-not-allowed" >
+
+
+下一步（信息验证）
+< / button >
+< / div >
+< / div >
+
+< !-- 3.
+安全问题1（文字输入，添加猪的背景） -->
+< div
+id = "step3"
+
+
+class ="fixed inset-0 bg-gradient-to-br from-system/95 to-blue-800/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500" >
+
+< div
+
+
+class ="absolute inset-0 bg-[url('https://i.postimg.cc/pm5FHkQh/A9d-Nbs-W6-Oe.jpg')] bg-cover bg-center opacity-10" > < / div >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 transform transition-all duration-500 scale-95 relative z-10" >
+
+< div
+
+
+class ="flex items-center justify-between mb-6" >
+
+< h2
+
+
+class ="text-xl font-bold text-gray-800" > 安全验证 1 / 5 < / h2 >
+
+< div
+
+
+class ="w-24 h-2 bg-gray-200 rounded-full overflow-hidden" >
+
+< div
+
+
+class ="h-full bg-system" style="width: 20%" > < / div >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="text-center mb-6" >
+
+< div
+
+
+class ="inline-flex items-center justify-center w-12 h-12 bg-system/10 rounded-full mb-4" >
+
+< i
+
+
+class ="fa fa-question text-system text-xl" > < / i >
+
+< / div >
+< h3
+
+
+class ="text-lg font-semibold text-gray-800 mb-2" > 基础信息确认 < / h3 >
+
+< p
+
+
+class ="text-gray-600" > 请回答问题证明您的身份 < / p >
+
+< / div >
+
+< div
+
+
+class ="mb-6" >
+
+< p
+
+
+class ="text-gray-700 mb-4" > 问题：曾秋林的真实属性是什么？ < / p >
+
+< input
+type = "text"
+id = "answer3"
+
+
+class ="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-system mb-2" placeholder="请输入答案..." >
+
+< p
+
+
+class ="text-gray-500 text-sm italic" > 提示：答案是"曾秋林是大笨猪" < / p >
+
+< / div >
+
+< button
+id = "toStep4"
+
+
+class ="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300" >
+
+
+提交答案
+< / button >
+< / div >
+< / div >
+
+< !-- 4.
+安全问题2（选择题，添加彭于晏的背景） -->
+< div
+id = "step4"
+
+
+class ="fixed inset-0 bg-gradient-to-br from-system/95 to-blue-800/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500" >
+
+< div
+
+
+class ="absolute inset-0 bg-[url('https://i.postimg.cc/kVrtX8wj/OIP.webp')] bg-cover bg-center opacity-10" > < / div >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 transform transition-all duration-500 scale-95 relative z-10" >
+
+< div
+
+
+class ="flex items-center justify-between mb-6" >
+
+< h2
+
+
+class ="text-xl font-bold text-gray-800" > 安全验证 2 / 5 < / h2 >
+
+< div
+
+
+class ="w-24 h-2 bg-gray-200 rounded-full overflow-hidden" >
+
+< div
+
+
+class ="h-full bg-system" style="width: 40%" > < / div >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="text-center mb-6" >
+
+< div
+
+
+class ="inline-flex items-center justify-center w-12 h-12 bg-system/10 rounded-full mb-4" >
+
+< i
+
+
+class ="fa fa-list-ul text-system text-xl" > < / i >
+
+< / div >
+< h3
+
+
+class ="text-lg font-semibold text-gray-800 mb-2" > 选项确认 < / h3 >
+
+< p
+
+
+class ="text-gray-600" > 请选择正确答案完成验证 < / p >
+
+< / div >
+
+< div
+
+
+class ="mb-6" >
+
+< p
+
+
+class ="text-gray-700 mb-4" > 问题：曾子固的颜值等级属于？ < / p >
+
+< div
+
+
+class ="space-y-3 mb-4" >
+
+< label
+
+
+class ="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" >
+
+< input
+type = "radio"
+name = "looks"
+value = "1"
+
+
+class ="mr-3 text-system" >
+
+< span > 普通帅哥 < / span >
+< / label >
+< label
+
+
+class ="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" >
+
+< input
+type = "radio"
+name = "looks"
+value = "2"
+
+
+class ="mr-3 text-system" >
+
+< span > 超级帅哥 < / span >
+< / label >
+< label
+
+
+class ="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" >
+
+< input
+type = "radio"
+name = "looks"
+value = "3"
+
+
+class ="mr-3 text-system" >
+
+< span > 超级无敌宇宙大帅哥 < / span >
+< / label >
+< label
+
+
+class ="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" >
+
+< input
+type = "radio"
+name = "looks"
+value = "4"
+
+
+class ="mr-3 text-system" >
+
+< span > 一般人 < / span >
+< / label >
+< / div >
+< / div >
+
+< button
+id = "toStep5"
+
+
+class ="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 opacity-50 cursor-not-allowed" >
+
+
+提交选项
+< / button >
+< / div >
+< / div >
+
+< !-- 5.
+滑块验证 -->
+< div
+id = "step5"
+
+
+class ="fixed inset-0 bg-gradient-to-br from-system/95 to-blue-800/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500" >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 transform transition-all duration-500 scale-95" >
+
+< div
+
+
+class ="flex items-center justify-between mb-6" >
+
+< h2
+
+
+class ="text-xl font-bold text-gray-800" > 安全验证 3 / 5 < / h2 >
+
+< div
+
+
+class ="w-24 h-2 bg-gray-200 rounded-full overflow-hidden" >
+
+< div
+
+
+class ="h-full bg-system" style="width: 60%" > < / div >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="text-center mb-6" >
+
+< div
+
+
+class ="inline-flex items-center justify-center w-12 h-12 bg-system/10 rounded-full mb-4" >
+
+< i
+
+
+class ="fa fa-arrows-h text-system text-xl" > < / i >
+
+< / div >
+< h3
+
+
+class ="text-lg font-semibold text-gray-800 mb-2" > 滑块验证 < / h3 >
+
+< p
+
+
+class ="text-gray-600" > 拖动滑块完成安全验证 < / p >
+
+< / div >
+
+< div
+
+
+class ="mb-6" >
+
+< div
+id = "sliderContainer"
+
+
+class ="w-full h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden relative" >
+
+< img
+src = "https://picsum.photos/seed/slider/300/80"
+alt = "验证图片"
+
+
+class ="w-full h-full object-cover opacity-70" >
+
+< div
+
+
+class ="absolute inset-0 flex items-center justify-center bg-black/30" >
+
+< p
+
+
+class ="text-white font-medium" > 向右拖动滑块 < / p >
+
+< / div >
+< div
+id = "slider"
+
+
+class ="absolute left-0 top-0 h-full w-16 bg-white shadow-md flex items-center justify-center cursor-pointer transform transition-transform duration-300" style="left: 0px;" >
+
+< i
+
+
+class ="fa fa-angle-right text-system text-xl" > < / i >
+
+< / div >
+< / div >
+< p
+
+
+class ="text-gray-500 text-sm mt-2 text-center" id="sliderText" > 请完成滑块验证 < / p >
+
+< / div >
+
+< button
+id = "toStep6"
+
+
+class ="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 opacity-50 cursor-not-allowed" >
+
+
+验证通过，下一步
+< / button >
+< / div >
+< / div >
+
+< !-- 6.
+系统修复加载 -->
+< div
+id = "step6"
+
+
+class ="fixed inset-0 bg-gray-100 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500" >
+
+< div
+
+
+class ="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 transform transition-all duration-500 scale-95" >
+
+< div
+
+
+class ="flex items-center justify-between mb-6" >
+
+< h2
+
+
+class ="text-xl font-bold text-gray-800" > 系统修复中 4 / 5 < / h2 >
+
+< div
+
+
+class ="w-24 h-2 bg-gray-200 rounded-full overflow-hidden" >
+
+< div
+
+
+class ="h-full bg-system" style="width: 80%" > < / div >
+
+< / div >
+< / div >
+
+< div
+
+
+class ="text-center mb-6" >
+
+< div
+
+
+class ="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4" >
+
+< i
+
+
+class ="fa fa-cog fa-spin text-success text-2xl" > < / i >
+
+< / div >
+< h3
+
+
+class ="text-lg font-semibold text-gray-800 mb-2" > 正在修复风险...< / h3 >
+
+< p
+
+
+class ="text-gray-600" id="repairText" > 正在清除恶意程序（35 % ） < / p >
+
+< / div >
+
+< div
+
+
+class ="mb-8" >
+
+< div
+
+
+class ="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-2" >
+
+< div
+id = "repairProgress"
+
+
+class ="h-full bg-success animate-progress rounded-full" style="width: 35%" > < / div >
+
+< / div >
+< p
+
+
+class ="text-gray-500 text-sm text-right" > 预计剩余时间：45秒 < / p >
+
+< / div >
+
+< div
+
+
+class ="bg-blue-50 border-l-4 border-system p-4" >
+
+< p
+
+
+class ="text-gray-700 text-sm" > < i class ="fa fa-info-circle mr-2" > < / i > 请勿关闭此页面，否则修复将失败并锁定设备 < / p >
+
+< / div >
+< / div >
+< / div >
+
+< !-- 7.
+最终整蛊结果 -->
+< div
+id = "step7"
+
+
+class ="fixed inset-0 bg-gradient-to-br from-purple-600 to-pink-600 flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-1000" >
+
+< div
+
+
+class ="text-center max-w-md w-full" >
+
+< div
+
+
+class ="inline-flex items-center justify-center w-20 h-20 bg-yellow-400 rounded-full mb-6 animate-pulse" >
+
+< i
+
+
+class ="fa fa-star text-yellow-600 text-3xl" > < / i >
+
+< / div >
+
+< h2
+
+
+class ="text-4xl font-bold text-white mb-6 drop-shadow-lg animate-float" > 恭喜完成所有验证！ < / h2 >
+
+< div
+
+
+class ="bg-glass rounded-2xl p-8 mb-8 transform transition-all duration-700 hover:scale-105" >
+
+< p
+
+
+class ="text-white text-xl mb-6" > 系统已记录您的所有确认信息： < / p >
+
+< div
+
+
+class ="space-y-6" >
+
+< div
+
+
+class ="bg-white/20 p-4 rounded-xl" >
+
+< p
+
+
+class ="text-white/80 text-sm mb-1" > 您确认曾秋林的属性为： < / p >
+
+< p
+
+
+class ="text-yellow-300 text-2xl font-bold" > "曾秋林是大笨猪" < / p >
+
+< / div >
+
+< div
+
+
+class ="bg-white/20 p-4 rounded-xl" >
+
+< p
+
+
+class ="text-white/80 text-sm mb-1" > 您选择曾子固的颜值等级为： < / p >
+
+< p
+
+
+class ="text-yellow-300 text-2xl font-bold" > "超级无敌宇宙大帅哥" < / p >
+
+< / div >
+
+< div
+
+
+class ="bg-white/20 p-4 rounded-xl" >
+
+< p
+
+
+class ="text-white/80 text-sm mb-1" > 系统自动同步至： < / p >
+
+< p
+
+
+class ="text-yellow-300 text-xl font-bold" > 曾秋林的微信、QQ、短信 < / p >
+
+< / div >
+< / div >
+< / div >
+
+< div
+
+
+class ="flex flex-col sm:flex-row gap-4 justify-center mb-8" >
+
+< button
+
+
+class ="social-btn bg-white/20 hover:bg-white/30 text-white rounded-full p-4 transition-all" >
+
+< i
+
+
+class ="fa fa-share-alt text-xl" > < / i > 分享给好友
+
+< / button >
+< button
+
+
+class ="social-btn bg-white/20 hover:bg-white/30 text-white rounded-full p-4 transition-all" >
+
+< i
+
+
+class ="fa fa-save text-xl" > < / i > 保存证书
+
+< / button >
+< button
+
+
+class ="social-btn bg-white/20 hover:bg-white/30 text-white rounded-full p-4 transition-all" >
+
+< i
+
+
+class ="fa fa-comment text-xl" > < / i > 发送给曾秋林
+
+< / button >
+< / div >
+
+< button
+id = "restart"
+
+
+class ="bg-white text-purple-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg" >
+
+< i
+
+
+class ="fa fa-refresh mr-2" > < / i > 再玩一次
+
+< / button >
+< / div >
+< / div >
+
+< script >
+// 元素获取
+const
+step1 = document.getElementById('step1');
+const
+step2 = document.getElementById('step2');
+const
+step3 = document.getElementById('step3');
+const
+step4 = document.getElementById('step4');
+const
+step5 = document.getElementById('step5');
+const
+step6 = document.getElementById('step6');
+const
+step7 = document.getElementById('step7');
+
+// 按钮获取
+const
+toStep2 = document.getElementById('toStep2');
+const
+toStep3 = document.getElementById('toStep3');
+const
+toStep4 = document.getElementById('toStep4');
+const
+toStep5 = document.getElementById('toStep5');
+const
+toStep6 = document.getElementById('toStep6');
+const
+restart = document.getElementById('restart');
+
+// 输入框获取
+const
+userName = document.getElementById('userName');
+const
+relation = document.getElementById('relation');
+const
+answer3 = document.getElementById('answer3');
+const
+slider = document.getElementById('slider');
+const
+sliderContainer = document.getElementById('sliderContainer');
+const
+sliderText = document.getElementById('sliderText');
+const
+repairProgress = document.getElementById('repairProgress');
+const
+repairText = document.getElementById('repairText');
+
+// 步骤1 → 步骤2
+toStep2.addEventListener('click', () = > {
+    step1.style.opacity = '0';
+setTimeout(() = > {
+    step1.style.display = 'none';
+step2.style.opacity = '1';
+step2.style.pointerEvents = 'auto';
+setTimeout(() = > step2.querySelector('div').style.transform = 'scale(1)', 100);
+}, 500);
+});
+
+// 监听信息输入，激活下一步按钮
+function
+checkInfoComplete()
+{
+if (userName.value.trim() & & relation.value)
+{
+    toStep3.classList.remove('opacity-50', 'cursor-not-allowed');
+} else {
+    toStep3.classList.add('opacity-50', 'cursor-not-allowed');
+}
+}
+userName.addEventListener('input', checkInfoComplete);
+relation.addEventListener('change', checkInfoComplete);
+
+// 步骤2 → 步骤3
+toStep3.addEventListener('click', () = > {
+    step2.style.opacity = '0';
+setTimeout(() = > {
+    step2.style.pointerEvents = 'none';
+step3.style.opacity = '1';
+step3.style.pointerEvents = 'auto';
+setTimeout(() = > step3.querySelector('div').style.transform = 'scale(1)', 100);
+}, 500);
+});
+
+// 步骤3 → 步骤4（验证答案）
+toStep4.addEventListener('click', () = > {
+if (answer3.value.trim() === '曾秋林是大笨猪')
+{
+    step3.style.opacity = '0';
+setTimeout(() = > {
+    step3.style.pointerEvents = 'none';
+step4.style.opacity = '1';
+step4.style.pointerEvents = 'auto';
+setTimeout(() = > step4.querySelector('div').style.transform = 'scale(1)', 100);
+}, 500);
+} else {
+    answer3.classList.add('animate-shake');
+setTimeout(() = > answer3.classList.remove('animate-shake'), 500);
+}
+});
+
+// 监听选项选择，激活下一步按钮
+document.querySelectorAll('input[name="looks"]').forEach(radio= > {
+    radio.addEventListener('change', () = > {
+if (radio.value === '3')
+{
+    toStep5.classList.remove('opacity-50', 'cursor-not-allowed');
+} else {
+    toStep5.classList.add('opacity-50', 'cursor-not-allowed');
+}
+});
+});
+
+// 步骤4 → 步骤5
+toStep5.addEventListener('click', () = > {
+    step4.style.opacity = '0';
+setTimeout(() = > {
+    step4.style.pointerEvents = 'none';
+step5.style.opacity = '1';
+step5.style.pointerEvents = 'auto';
+setTimeout(() = > step5.querySelector('div').style.transform = 'scale(1)', 100);
+}, 500);
+});
+
+// 滑块验证逻辑
+let
+isDragging = false;
+const
+sliderWidth = sliderContainer.clientWidth - slider.clientWidth;
+
+slider.addEventListener('mousedown', startDrag);
+slider.addEventListener('touchstart', startDrag);
+document.addEventListener('mousemove', drag);
+document.addEventListener('touchmove', drag);
+document.addEventListener('mouseup', endDrag);
+document.addEventListener('touchend', endDrag);
+
+function
+startDrag(e)
+{
+    isDragging = true;
+e.preventDefault();
+}
+
+function
+drag(e)
+{
+if (!isDragging)
+return;
+let
+clientX = e.type.includes('mouse') ? e.clientX: e.touches[0].clientX;
+const
+rect = sliderContainer.getBoundingClientRect();
+let
+left = clientX - rect.left - slider.clientWidth / 2;
+left = Math.max(0, Math.min(left, sliderWidth));
+slider.style.left = `${left}
+px
+`;
+}
+
+function
+endDrag()
+{
+if (!isDragging) return;
+isDragging = false;
+if (parseInt(slider.style.left) >= sliderWidth - 10) {
+// 验证成功
+sliderContainer.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-green-50"><i class="fa fa-check text-success text-2xl"></i></div>';
+sliderText.textContent = '验证成功';
+sliderText.classList.add('text-success');
+setTimeout(() = > toStep6.classList.remove('opacity-50', 'cursor-not-allowed'), 500);
+} else {
+// 验证失败，重置
+slider.style.left = '0';
+sliderText.textContent = '验证失败，请重试';
+sliderText.classList.add('text-danger');
+setTimeout(() = > {
+sliderText.textContent = '请完成滑块验证';
+sliderText.classList.remove('text-danger');
+}, 1500);
+}
+}
+
+// 步骤5 → 步骤6
+toStep6.addEventListener('click', () = > {
+    step5.style.opacity = '0';
+setTimeout(() = > {
+    step5.style.pointerEvents = 'none';
+step6.style.opacity = '1';
+step6.style.pointerEvents = 'auto';
+
+// 模拟进度加载
+let
+progress = 35;
+const
+progressInterval = setInterval(() = > {
+    progress += Math.random() * 5;
+if (progress >= 100)
+{
+    progress = 100;
+clearInterval(progressInterval);
+// 加载完成后跳转
+setTimeout(() = > {
+    step6.style.opacity = '0';
+setTimeout(() = > {
+    step6.style.pointerEvents = 'none';
+step7.style.opacity = '1';
+step7.style.pointerEvents = 'auto';
+}, 500);
+}, 1000);
+}
+repairProgress.style.width = `${progress} % `;
+repairText.textContent = `正在修复漏洞（${Math.round(progress)} %）`;
+}, 500);
+}, 500);
+});
+
+// 社交按钮点击效果
+document.querySelectorAll('.social-btn').forEach(btn= > {
+    btn.addEventListener('click', () = > {
+    alert('这只是整蛊效果，不会真的分享哦～');
+});
+});
+
+// 重新开始
+restart.addEventListener('click', () = > {
+    step7.style.opacity = '0';
+setTimeout(() = > {
+    step7.style.pointerEvents = 'none';
+// 重置所有状态
+step1.style.display = 'flex';
+step1.style.opacity = '1';
+answer3.value = '';
+userName.value = '';
+relation.value = '';
+slider.style.left = '0';
+sliderText.textContent = '请完成滑块验证';
+sliderText.classList.remove('text-success', 'text-danger');
+document.querySelectorAll('input[name="looks"]').forEach(radio= > radio.checked = false);
+repairProgress.style.width = '35%';
+repairText.textContent = '正在清除恶意程序（35%）';
+toStep3.classList.add('opacity-50', 'cursor-not-allowed');
+toStep5.classList.add('opacity-50', 'cursor-not-allowed');
+toStep6.classList.add('opacity-50', 'cursor-not-allowed');
+step2.querySelector('div').style.transform = 'scale(0.95)';
+step3.querySelector('div').style.transform = 'scale(0.95)';
+step4.querySelector('div').style.transform = 'scale(0.95)';
+}, 1000);
+});
+< / script >
+    < / body >
+        < / html >
