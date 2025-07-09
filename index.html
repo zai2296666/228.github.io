@@ -168,9 +168,9 @@
             </div>
             
             <div class="mb-6">
-                <p class="text-gray-700 mb-4">问题：曾秋林的真实属性是什么？</p>
+                <p class="text-gray-700 mb-4">问题：你是谁？</p>
                 <input type="text" id="answer3" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-system mb-2" placeholder="请输入答案...">
-                <p class="text-gray-500 text-sm italic">提示：答案是"曾秋林是大笨猪"</p>
+                <p class="text-gray-500 text-sm italic">提示：可选答案包括"我是猪"、"奥特曼"、"程咬金"、"武则天"</p>
             </div>
             
             <button id="toStep4" class="w-full bg-system hover:bg-system/90 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">
@@ -309,8 +309,8 @@
                 
                 <div class="space-y-6">
                     <div class="bg-white/20 p-4 rounded-xl">
-                        <p class="text-white/80 text-sm mb-1">您确认曾秋林的属性为：</p>
-                        <p class="text-yellow-300 text-2xl font-bold">"曾秋林是大笨猪"</p>
+                        <p class="text-white/80 text-sm mb-1">您确认自己的身份为：</p>
+                        <p class="text-yellow-300 text-2xl font-bold">"我是猪"</p>
                     </div>
                     
                     <div class="bg-white/20 p-4 rounded-xl">
@@ -320,7 +320,7 @@
                     
                     <div class="bg-white/20 p-4 rounded-xl">
                         <p class="text-white/80 text-sm mb-1">系统自动同步至：</p>
-                        <p class="text-yellow-300 text-xl font-bold">曾秋林的微信、QQ、短信</p>
+                        <p class="text-yellow-300 text-xl font-bold">所有联系人列表</p>
                     </div>
                 </div>
             </div>
@@ -333,7 +333,7 @@
                     <i class="fa fa-save text-xl"></i> 保存证书
                 </button>
                 <button class="social-btn bg-white/20 hover:bg-white/30 text-white rounded-full p-4 transition-all">
-                    <i class="fa fa-comment text-xl"></i> 发送给曾秋林
+                    <i class="fa fa-comment text-xl"></i> 发送给好友
                 </button>
             </div>
             
@@ -406,7 +406,7 @@
 
         // 步骤3 → 步骤4（验证答案）
         toStep4.addEventListener('click', () => {
-            if (answer3.value.trim() === '曾秋林是大笨猪') {
+            if (answer3.value.trim() === '我是猪') {
                 step3.style.opacity = '0';
                 setTimeout(() => {
                     step3.style.pointerEvents = 'none';
